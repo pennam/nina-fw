@@ -85,6 +85,29 @@ int setPassPhrase(const uint8_t command[], uint8_t response[])
   return 6;
 }
 
+int setBssiPassPhrase(const uint8_t command[], uint8_t response[])
+{
+  char bssid[5 + 1];
+  char ssid[32 + 1];
+  char pass[64 + 1];
+
+  memset(bssid, 0x00, sizeof(bssid));
+  memset(ssid, 0x00, sizeof(ssid));
+  memset(pass, 0x00, sizeof(pass));
+
+  memcpy(bssid, &command[4], command[3]);
+  memcpy(ssid, &command[5 + command[3]], command[4 + command[3]]);
+  memcpy(pass, &command[6 + command[3] + command[4 + command[3]]], command[5 + command[3] + command[4 + command[3]]]);
+
+  WiFi.begin(bssid, ssid, pass);
+
+  response[2] = 1; // number of parameters
+  response[3] = 1; // parameter 1 length
+  response[4] = 1;
+
+  return 6;
+}
+
 int setKey(const uint8_t command[], uint8_t response[])
 {
   char ssid[32 + 1];
@@ -1570,6 +1593,9 @@ const CommandHandlerType commandHandlers[] = {
 
   // 0x60 -> 0x6f
   writeFile, readFile, deleteFile, existsFile, downloadFile,  applyOTA, renameFile, downloadOTA, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+
+  // 0x70 -> 0x7f
+  setBssiPassPhrase, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 };
 
 #define NUM_COMMAND_HANDLERS (sizeof(commandHandlers) / sizeof(commandHandlers[0]))

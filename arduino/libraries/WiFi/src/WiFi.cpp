@@ -177,19 +177,28 @@ int WiFiClass::ping(/*IPAddress*/uint32_t host, uint8_t ttl)
 
 uint8_t WiFiClass::begin(const char* ssid)
 {
-  return begin(ssid, "");
+  return begin("", ssid, "");
 }
 
 uint8_t WiFiClass::begin(const char* ssid, uint8_t key_idx, const char* key)
 {
-  return begin(ssid, key);
+  return begin("", ssid, key);
 }
 
 uint8_t WiFiClass::begin(const char* ssid, const char* key)
 {
+  return begin("", ssid, key);
+}
+
+uint8_t WiFiClass::begin(const char* bssid, const char* ssid, const char* key)
+{
   wifi_config_t wifiConfig;
 
   memset(&wifiConfig, 0x00, sizeof(wifiConfig));
+  if(strlen(bssid) != 0) {
+    strncpy((char*)wifiConfig.sta.bssid, ssid, sizeof(wifiConfig.sta.bssid));
+    wifiConfig.sta.bssid_set = 1;
+  }
   strncpy((char*)wifiConfig.sta.ssid, ssid, sizeof(wifiConfig.sta.ssid));
   strncpy((char*)wifiConfig.sta.password, key, sizeof(wifiConfig.sta.password));
   wifiConfig.sta.scan_method = WIFI_FAST_SCAN;
