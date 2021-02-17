@@ -12,8 +12,10 @@ This firmware uses [Espressif's IDF](https://github.com/espressif/esp-idf)
 1. Load the `Tools -> SerialNINAPassthrough` example sketch on to the board
 1. Use `esptool` to flash the compiled firmware
 
-## Notes
-If updating **Arduino UNO WiFi Rev. 2** NINA firmware via [SerialNINAPassthrough](https://github.com/arduino-libraries/WiFiNINA/blob/master/examples/Tools/SerialNINAPassthrough/SerialNINAPassthrough.ino) sketch then the `esptool` invocation needs to be changed slightly:
+## Notes for Arduino UNO WiFi Rev. 2
+Run `make RELEASE=1 UNO_WIFI_REV2=1` to build the firmware
+
+If updating NINA firmware via [SerialNINAPassthrough](https://github.com/arduino-libraries/WiFiNINA/blob/master/examples/Tools/SerialNINAPassthrough/SerialNINAPassthrough.ino) sketch then the `esptool` invocation needs to be changed slightly:
 ```diff
 -  --baud 115200 --before default_reset
 +  --baud 115200 --before no_reset
